@@ -26,11 +26,11 @@ builder.Services.AddCors(options =>
             policy.WithOrigins("http://localhost:3000");
         }
 
-        policy.WithHeaders(new []
+        policy.WithHeaders(new[]
         {
             "Content-Type",
         });
-        policy.WithMethods(new []
+        policy.WithMethods(new[]
         {
             HttpMethod.Get.ToString(),
             HttpMethod.Post.ToString(),
@@ -67,6 +67,7 @@ builder.Services.AddControllers();
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen(options =>
 {
+    // SwaggerUIにAuth用のボタンを設定
     var securityScheme = new Microsoft.OpenApi.Models.OpenApiSecurityScheme
     {
         Name = Microsoft.Net.Http.Headers.HeaderNames.Authorization,
@@ -76,8 +77,9 @@ builder.Services.AddSwaggerGen(options =>
         BearerFormat = "JWT",
         Description = "APIの実行の認証・認可に必要なアクセストークンを設定してください。",
     };
-
     options.AddSecurityDefinition(Microsoft.Net.Http.Headers.HeaderNames.Authorization, securityScheme);
+
+    // SwaggerUIでのリクエストフィルターを追加
     options.OperationFilter<API.Util.AssignJwtSecurityRequirements>();
 });
 
@@ -94,7 +96,7 @@ if (app.Environment.IsDevelopment())
 
 app.UseAuthentication();
 app.UseAuthorization();
-
+app.UseCors(corsName);
 app.MapControllers();
 
 app.Run();

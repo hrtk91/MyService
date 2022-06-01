@@ -19,6 +19,7 @@ public class AssignJwtSecurityRequirements : IOperationFilter
 
         if (!allowAnonymousAccess)
         {
+            // Authorizationヘッダを付与するよう設定
             var requirements = new OpenApiSecurityRequirement();
             requirements.Add(new OpenApiSecurityScheme
             {

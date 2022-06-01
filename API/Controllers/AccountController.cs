@@ -1,17 +1,18 @@
 using API.Services;
 using API.Services.Interfaces;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
 namespace API.Controllers;
 
 [ApiController]
 [Route("api/[controller]/[action]")]
-public class AccountControler : ControllerBase
+public class AccountController : ControllerBase
 {
-    private readonly ILogger<AccountControler> logger;
+    private readonly ILogger<AccountController> logger;
     private readonly IAccountService accountService;
 
-    public AccountControler(ILogger<AccountControler> logger, IAccountService accountService)
+    public AccountController(ILogger<AccountController> logger, IAccountService accountService)
     {
         this.logger = logger;
         this.accountService = accountService;

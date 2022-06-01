@@ -29,6 +29,7 @@ builder.Services.AddCors(options =>
         policy.WithHeaders(new[]
         {
             "Content-Type",
+            "Authorization"
         });
         policy.WithMethods(new[]
         {

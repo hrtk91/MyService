@@ -1,4 +1,5 @@
 import HttpClient from "../../models/HttpClient";
+import UploadForm from "../organisms/UploadForm";
 interface IProps {
   httpClient: HttpClient;
 }
@@ -21,6 +22,7 @@ export default function Test(props: IProps) {
       <button type="button" onClick={onClick}>
         てすと
       </button>
+      <UploadForm />
     </div>
   );
 }

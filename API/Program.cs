@@ -11,6 +11,8 @@ var builder = WebApplication.CreateBuilder(args);
 // Add services to the container.
 
 builder.Services.AddScoped<IAccountService, AccountService>();
+builder.Services.AddScoped<IArticleService, ArticleService>();
+builder.Services.AddScoped<IPictureService, PictureService>();
 
 // Cors設定を追加
 var corsName = "MyServiceApp";

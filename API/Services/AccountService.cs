@@ -1,4 +1,5 @@
 using System.IdentityModel.Tokens.Jwt;
+using System.Security.Claims;
 using System.Security.Cryptography;
 using System.Text;
 using API.Data;
@@ -37,7 +38,7 @@ public class AccountService : IAccountService
                 throw new UnauthorizedException($"対象ユーザーが見つかりませんでした。Id={id}, Password={password}");
             }
 
-            var token = BuildToken();
+            var token = BuildToken(id);
             return new DTO.AccessToken
             {
                 Token = token,
@@ -93,7 +94,7 @@ public class AccountService : IAccountService
                 throw exception;
             }
 
-            var token = BuildToken();
+            var token = BuildToken(id);
             return new DTO.AccessToken
             {
                 Token = token,
@@ -105,7 +106,7 @@ public class AccountService : IAccountService
         }
     }
 
-    private string BuildToken()
+    private string BuildToken(string userId)
     {
         var jwt = configuration.GetSection(nameof(Settings.Jwt)).Get<Settings.Jwt>();
 
@@ -114,14 +115,21 @@ public class AccountService : IAccountService
         var key = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(jwt.Key));
         var creds = new SigningCredentials(key, SecurityAlgorithms.HmacSha256);
 
-        var token = new JwtSecurityToken(
-            issuer: jwt.Issuer,
-            audience: jwt.Audience,
-            expires: DateTime.Now.AddMinutes(jwt.ExpireMinute),
-            signingCredentials: creds);
+        var handler = new JwtSecurityTokenHandler();
+        var descripter = new SecurityTokenDescriptor
+        {
+            Issuer = jwt.Issuer,
+            Audience = jwt.Audience,
+            Expires = DateTime.UtcNow.AddMinutes(jwt.ExpireMinute),
+            SigningCredentials = creds,
+            Subject = new System.Security.Claims.ClaimsIdentity(new List<Claim>
+            {
+                new Claim("ID", userId),
+            }),
+        };
+        var token = handler.CreateJwtSecurityToken(descripter);
 
-        return new JwtSecurityTokenHandler()
-            .WriteToken(token);
+        return handler.WriteToken(token);
     }
 
     private string HashData(string data)

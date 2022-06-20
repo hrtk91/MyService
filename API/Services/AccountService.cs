@@ -32,13 +32,13 @@ public class AccountService : IAccountService
         try
         {
             var (id, password) = AuthInfoToHashData(authInfo);
-            var exists = await context.Users.AnyAsync(x => x.LoginId == id && x.LoginPassword == password);
-            if (!exists)
+            var user = await context.Users.SingleOrDefaultAsync(x => x.LoginId == id && x.LoginPassword == password);
+            if (user is null)
             {
                 throw new UnauthorizedException($"対象ユーザーが見つかりませんでした。Id={id}, Password={password}");
             }
 
-            var token = BuildToken(id);
+            var token = BuildToken(user.UserId.ToString());
             return new DTO.AccessToken
             {
                 Token = token,
@@ -76,13 +76,13 @@ public class AccountService : IAccountService
                 throw new UnauthorizedException($"すでに使用されているIdです。Id={id}");
             }
 
+            var user = new Models.User
+            {
+                LoginId = id,
+                LoginPassword = password,
+            };
             try
             {
-                var user = new Models.User
-                {
-                    LoginId = id,
-                    LoginPassword = password,
-                };
 
                 await context.Users.AddAsync(user);
                 await context.SaveChangesAsync();
@@ -94,7 +94,7 @@ public class AccountService : IAccountService
                 throw exception;
             }
 
-            var token = BuildToken(id);
+            var token = BuildToken(user.UserId.ToString());
             return new DTO.AccessToken
             {
                 Token = token,
@@ -122,9 +122,9 @@ public class AccountService : IAccountService
             Audience = jwt.Audience,
             Expires = DateTime.UtcNow.AddMinutes(jwt.ExpireMinute),
             SigningCredentials = creds,
-            Subject = new System.Security.Claims.ClaimsIdentity(new List<Claim>
+            Subject = new ClaimsIdentity(new List<Claim>
             {
-                new Claim("ID", userId),
+                new Claim("userId", userId),
             }),
         };
         var token = handler.CreateJwtSecurityToken(descripter);

@@ -50,13 +50,13 @@ public class ArticleController : ControllerBase
     [Authorize]
     public async Task<ActionResult<DTO.Article>> Create(IEnumerable<IFormFile> files)
     {
-        var id = User.Claims.SingleOrDefault(x => x.Type == "ID")?.Value;
+        var id = User.Claims.SingleOrDefault(x => x.Type == "userId")?.Value;
         if (id is null)
         {
             return Unauthorized();
         }
 
-        var user = await context.Users.SingleOrDefaultAsync(x => x.LoginId == id);
+        var user = await context.Users.SingleOrDefaultAsync(x => x.UserId == Guid.Parse(id));
         if (user is null)
         {
             return Unauthorized();

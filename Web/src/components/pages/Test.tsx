@@ -1,7 +1,9 @@
 import HttpClient from "../../models/HttpClient";
+import ArticleService from "../../services/ArticleService";
 import UploadForm from "../organisms/UploadForm";
 interface IProps {
   httpClient: HttpClient;
+  articleService: ArticleService;
 }
 
 export default function Test(props: IProps) {
@@ -15,6 +17,10 @@ export default function Test(props: IProps) {
       alert("testに失敗しましたー");
     }
   };
+  const onSubmit = async (files: File[]): Promise<void> => {
+    const resp = await props.articleService.create(files);
+    alert(JSON.stringify(resp));
+  };
 
   return (
     <div>
@@ -22,7 +28,7 @@ export default function Test(props: IProps) {
       <button type="button" onClick={onClick}>
         てすと
       </button>
-      <UploadForm />
+      <UploadForm onSubmit={onSubmit} />
     </div>
   );
 }

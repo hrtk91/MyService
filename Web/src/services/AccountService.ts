@@ -55,4 +55,11 @@ export default class AccountService {
       }
     }
   };
+
+  public isAuthorized = (): boolean => this.httpClient.isAuthorized();
+
+  public userId = (): string => {
+    const claims = this.httpClient.getJwtClaims();
+    return claims.userId;
+  };
 }

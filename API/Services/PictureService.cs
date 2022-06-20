@@ -1,13 +1,24 @@
+using API.Data;
+using Microsoft.EntityFrameworkCore;
+
 namespace API.Services;
 
 public class PictureService : Interfaces.IPictureService
 {
     private readonly string saveDirName = "pic";
     private readonly IHostEnvironment env;
+    private readonly ApplicationDbContext context;
 
-    public PictureService(IHostEnvironment env)
+    public PictureService(IHostEnvironment env, ApplicationDbContext context)
     {
         this.env = env;
+        this.context = context;
+    }
+
+    public async Task<string> GetFileName(string pictureId)
+    {
+        var picture = await context.Pictures.SingleAsync(x => x.PictureId == Guid.Parse(pictureId));
+        return picture.FileName;
     }
 
     public bool Exists(string fileName)

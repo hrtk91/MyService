@@ -24,7 +24,7 @@ public class ArticleController : ControllerBase
 
     [HttpGet]
     [Authorize]
-    [Route("{id}")]
+    [Route("{articleId}")]
     public async Task<ActionResult<DTO.Article>> Get(Guid articleId)
     {
         try
@@ -39,7 +39,7 @@ public class ArticleController : ControllerBase
 
     [HttpGet]
     [Authorize]
-    [Route("{userId}")]
+    [Route("All/{userId}")]
     public async Task<ActionResult<IEnumerable<DTO.Article>>> All(Guid userId)
     {
         var articles = await articleService.All(userId);

@@ -14,9 +14,10 @@ public class PictureController : ControllerBase
     }
 
     [HttpGet]
-    [Route("{fileName}")]
-    public IActionResult Get(string fileName)
+    [Route("{pictureId}")]
+    public async Task<IActionResult> Get(string pictureId)
     {
+        var fileName = await picService.GetFileName(pictureId);
         if (!picService.Exists(fileName))
         {
             return NotFound();

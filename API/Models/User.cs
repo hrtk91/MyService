@@ -12,4 +12,10 @@ public class User
 
     [Required]
     public string LoginPassword { get; set; } = string.Empty;
+
+    [Required]
+    public DateTime Created { get; set; }
+
+    [Required]
+    public DateTime Modified { get; set; }
 }

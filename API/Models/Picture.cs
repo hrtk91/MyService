@@ -9,4 +9,10 @@ public class Picture
 
     [Required]
     public string FileName { get; set; } = string.Empty;
+
+    [Required]
+    public DateTime Created { get; set; }
+
+    [Required]
+    public DateTime Modified { get; set; }
 }

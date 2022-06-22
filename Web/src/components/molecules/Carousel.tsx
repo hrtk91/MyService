@@ -1,21 +1,7 @@
-import { useEffect, useState } from "react";
-
 interface IProps {
-  files: File[];
+  itemUrls: string[];
 }
 export default function Carousel(props: IProps) {
-  const files = props.files;
-  const [itemUrls, setItemUrls] = useState<string[]>(
-    files.map((file) => (URL || webkitURL).createObjectURL(file))
-  );
-
-  useEffect(() => {
-    setItemUrls(files.map((file) => (URL || webkitURL).createObjectURL(file)));
-    return function cleanup() {
-      itemUrls?.map((URL || webkitURL).revokeObjectURL);
-    };
-  }, [props.files]);
-
   return (
     <div
       id="carouselControls"
@@ -23,7 +9,7 @@ export default function Carousel(props: IProps) {
       data-bs-ride="carousel"
     >
       <div className="carousel-indicators">
-        {itemUrls?.map((_url, idx) => (
+        {props.itemUrls?.map((_url, idx) => (
           <button
             key={idx}
             type="button"
@@ -35,7 +21,7 @@ export default function Carousel(props: IProps) {
         ))}
       </div>
       <div className="carousel-inner">
-        {itemUrls?.map((url, idx) => (
+        {props.itemUrls?.map((url, idx) => (
           <div
             key={idx}
             className={`carousel-item bg-secondary ${

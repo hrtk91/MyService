@@ -1,4 +1,4 @@
-import React, { FormEvent, useState } from "react";
+import React, { FormEvent, useEffect, useState } from "react";
 import Carousel from "../molecules/Carousel";
 
 interface IProps {
@@ -9,15 +9,29 @@ interface IProps {
 export default function UploadForm(props: IProps) {
   const [files, setFiles] = useState<File[]>([]);
   const fileInput = React.createRef<HTMLInputElement>();
+  const [fileUrls, setFileUrls] = useState<string[]>([]);
   const onChange = () => {
     const files = [...(fileInput?.current?.files ?? [])];
     setFiles(files);
+
+    const fileUrls = files.map((file) =>
+      (URL || webkitURL).createObjectURL(file)
+    );
+    setFileUrls(fileUrls);
+
     props.onChange?.(files);
   };
   const onSubmit = (ev: FormEvent<HTMLFormElement>) => {
     ev.preventDefault();
     props.onSubmit?.(files);
   };
+
+  useEffect(() => {
+    return function cleanup() {
+      fileUrls?.map((URL || webkitURL).revokeObjectURL);
+    };
+  }, [fileUrls]);
+
   return (
     <div>
       <form onSubmit={onSubmit}>
@@ -34,7 +48,7 @@ export default function UploadForm(props: IProps) {
           <button className="btn btn-primary">投稿</button>
         </div>
       </form>
-      <Carousel files={files} />
+      <Carousel itemUrls={fileUrls} />
     </div>
   );
 }

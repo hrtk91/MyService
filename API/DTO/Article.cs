@@ -8,6 +8,10 @@ public class Article
 
     public Guid OwnerId { get; set; }
 
+    public DateTime Created { get; set; }
+
+    public DateTime Modified { get; set; }
+
     public static DTO.Article From(Models.Article model)
     {
         return new DTO.Article
@@ -17,6 +21,8 @@ public class Article
             Pictures = model.Pictures
                 .Select(x => DTO.Picture.From(x))
                 .ToList(),
+            Created = model.Created,
+            Modified = model.Modified,
         };
     }
 }

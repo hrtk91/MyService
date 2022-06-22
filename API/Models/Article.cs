@@ -13,8 +13,8 @@ public class Article
     public User Owner { get; set; } = new User();
 
     [Required]
-    public DateTime Created { get; set; }
+    public DateTime Created { get; set; } = DateTime.UtcNow;
 
     [Required]
-    public DateTime Modified { get; set; }
+    public DateTime Modified { get; set; } = DateTime.UtcNow;
 }

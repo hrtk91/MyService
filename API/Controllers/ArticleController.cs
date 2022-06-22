@@ -65,4 +65,12 @@ public class ArticleController : ControllerBase
         var article = await articleService.Save(files, user);
         return article;
     }
+
+    [HttpGet]
+    [Route("latest")]
+    public async Task<ActionResult<IEnumerable<DTO.Article>>> Latest(int num = 10)
+    {
+        var latest = await articleService.Latest(num);
+        return latest.ToList();
+    }
 }

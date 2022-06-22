@@ -55,4 +55,15 @@ public class ArticleService : Interfaces.IArticleService
         await context.SaveChangesAsync();
         return DTO.Article.From(article);
     }
+
+    public async Task<IEnumerable<DTO.Article>> Latest(int num = 10)
+    {
+        var latest = (await context.Articles
+            .OrderByDescending(x => x.Created)
+            .Include(x => x.Pictures)
+            .Include(x => x.Owner)
+            .ToListAsync())
+            .TakeLast(num);
+        return latest.Select(x => DTO.Article.From(x)).ToList();
+    }
 }

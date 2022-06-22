@@ -25,4 +25,16 @@ export default class ArticleService {
       .then((res) => res.data);
     return res;
   }
+
+  public async latest(num = 10): Promise<IArticle[]> {
+    const articles = await this.httpClient
+      .get("article/latest", {
+        data: {
+          num: num,
+        },
+      })
+      .then((res) => res.data);
+
+    return articles;
+  }
 }

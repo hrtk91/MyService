@@ -3,6 +3,7 @@ import { IArticle } from "../../models/Interfaces";
 import AccountService from "../../services/AccountService";
 import ArticleService from "../../services/ArticleService";
 import PictureService from "../../services/PictureService";
+import Card from "../molecules/Card";
 
 interface IProps {
   accountService: AccountService;
@@ -46,18 +47,13 @@ export default function MyPost(props: IProps) {
         <p>UserId : {userId}</p>
         <div className="card-group">
           {articles.map((article) => (
-            <div className="card" key={article.articleId}>
-              <div className="card-body">
-                <p className="card-text">ArticleId : {article.articleId}</p>
-              </div>
-              {article.pictures.map((pic) => (
-                <img
-                  className="card-img-bottom"
-                  key={pic.pictureId}
-                  src={props.pictureService.getImgUrl(pic.pictureId)}
-                />
-              ))}
-            </div>
+            <Card
+              key={article.articleId}
+              text={`ArticleId : ${article.articleId}`}
+              bottomImages={article.pictures.map((x) =>
+                props.pictureService.getImgUrl(x.pictureId)
+              )}
+            />
           ))}
         </div>
       </div>

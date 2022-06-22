@@ -1,5 +1,7 @@
+import { ServiceContext } from "../../context";
 import HttpClient from "../../models/HttpClient";
 import ArticleService from "../../services/ArticleService";
+import LatestPost from "../organisms/LatestPost";
 import UploadForm from "../organisms/UploadForm";
 interface IProps {
   httpClient: HttpClient;
@@ -29,6 +31,14 @@ export default function Test(props: IProps) {
         てすと
       </button>
       <UploadForm onSubmit={onSubmit} />
+      <ServiceContext.Consumer>
+        {(context) => (
+          <LatestPost
+            articleService={context.articleService}
+            pictureService={context.pictureService}
+          />
+        )}
+      </ServiceContext.Consumer>
     </div>
   );
 }

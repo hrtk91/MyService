@@ -7,15 +7,15 @@ export interface IMyClaims {
 }
 
 export default class AuthenticationService {
-  private httpClient: ApiClient;
+  private apiClient: ApiClient;
 
-  public constructor(httpClient: ApiClient) {
-    this.httpClient = httpClient;
+  public constructor(apiClient: ApiClient) {
+    this.apiClient = apiClient;
   }
 
   public signin = async (id: string, password: string): Promise<string> => {
     try {
-      const token = await this.httpClient
+      const token = await this.apiClient
         .post("/account/signin", {
           id: id,
           password: password,
@@ -23,7 +23,7 @@ export default class AuthenticationService {
         .then((res): IToken => res.data)
         .then((itoken) => itoken.token);
 
-      this.httpClient.setAuthHeader(`Bearer ${token}`);
+      this.apiClient.setAuthHeader(`Bearer ${token}`);
 
       return token;
     } catch (err: unknown) {
@@ -42,7 +42,7 @@ export default class AuthenticationService {
 
   public signup = async (id: string, password: string): Promise<string> => {
     try {
-      const token = await this.httpClient
+      const token = await this.apiClient
         .post("/account/signup", {
           id: id,
           password: password,
@@ -50,7 +50,7 @@ export default class AuthenticationService {
         .then((res): IToken => res.data)
         .then((itoken) => itoken.token);
 
-      this.httpClient.setAuthHeader(`Bearer ${token}`);
+      this.apiClient.setAuthHeader(`Bearer ${token}`);
 
       return token;
     } catch (err) {
@@ -68,7 +68,7 @@ export default class AuthenticationService {
   };
 
   public signout = () => {
-    this.httpClient.setAuthHeader("");
+    this.apiClient.setAuthHeader("");
   };
 
   public getJwtClaims = (token: string): IMyClaims => {

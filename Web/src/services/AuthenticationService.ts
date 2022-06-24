@@ -23,7 +23,7 @@ export default class AuthenticationService {
         .then((res): IToken => res.data)
         .then((itoken) => itoken.token);
 
-      this.apiClient.setAuthHeader(`Bearer ${token}`);
+      this.setAuthHeader(token);
 
       return token;
     } catch (err: unknown) {
@@ -50,7 +50,7 @@ export default class AuthenticationService {
         .then((res): IToken => res.data)
         .then((itoken) => itoken.token);
 
-      this.apiClient.setAuthHeader(`Bearer ${token}`);
+      this.setAuthHeader(token);
 
       return token;
     } catch (err) {
@@ -79,5 +79,9 @@ export default class AuthenticationService {
   public userId = (token: string): string => {
     const claims = this.getJwtClaims(token);
     return claims.userId;
+  };
+
+  public setAuthHeader = (token: string) => {
+    this.apiClient.setAuthHeader(`Bearer ${token}`);
   };
 }

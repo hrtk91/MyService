@@ -41,6 +41,18 @@ export default function AuthProvider(props: IProps) {
 
   const isAuthenticated = () => token !== "";
 
+  useEffect(() => {
+    const token = localStorage.getItem("token");
+    if (token) {
+      authService.setAuthHeader(token);
+      setToken(token);
+    }
+  }, []);
+
+  useEffect(() => {
+    localStorage.setItem("token", token);
+  }, [token]);
+
   return (
     <AuthContext.Provider
       value={{

@@ -30,6 +30,7 @@ export default function LatestPost() {
                   <img
                     key={pic.pictureId}
                     src={pictureService.getImgUrl(pic.pictureId)}
+                    className="h-auto w-100"
                   />
                 ))}
               </>

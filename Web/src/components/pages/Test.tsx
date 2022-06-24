@@ -1,13 +1,15 @@
+import { useNavigate } from "react-router-dom";
 import { useArticleService } from "../../context";
 import LatestPost from "../organisms/LatestPost";
 import UploadForm from "../organisms/UploadForm";
 
 export default function Test() {
+  const navigate = useNavigate();
   const articleService = useArticleService();
 
   const onSubmit = async (files: File[]): Promise<void> => {
     await articleService.create(files);
-    location.reload();
+    navigate(0);
   };
 
   return (

@@ -73,4 +73,12 @@ public class ArticleController : ControllerBase
         var latest = await articleService.Latest(num);
         return latest.ToList();
     }
+
+    [HttpDelete]
+    [Route("{articleId}")]
+    public async Task<IActionResult> Delete(string articleId)
+    {
+        await articleService.Delete(Guid.Parse(articleId));
+        return NoContent();
+    }
 }

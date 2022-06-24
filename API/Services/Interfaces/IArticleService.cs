@@ -9,4 +9,6 @@ public interface IArticleService
     public Task<DTO.Article> Save(IEnumerable<IFormFile> files, Models.User user);
 
     public Task<IEnumerable<DTO.Article>> Latest(int num = 10);
+
+    public Task Delete(Guid id);
 }

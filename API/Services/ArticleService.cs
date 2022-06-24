@@ -66,4 +66,13 @@ public class ArticleService : Interfaces.IArticleService
             .TakeLast(num);
         return latest.Select(x => DTO.Article.From(x)).ToList();
     }
+
+    public async Task Delete(Guid id)
+    {
+        var article = await context.Articles
+            .Include(x => x.Pictures)
+            .SingleAsync(x => x.ArticleId == id);
+        context.Remove(article);
+        await context.SaveChangesAsync();
+    }
 }

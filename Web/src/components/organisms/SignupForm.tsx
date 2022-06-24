@@ -11,7 +11,8 @@ export default function SignupForm() {
   const [id, setId] = useState("");
   const [password, setPassword] = useState("");
 
-  const from = location.state?.from?.pathname || "/";
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  const from = (location.state as any)?.from?.pathname || "/";
 
   const clear = (): void => {
     setId("");

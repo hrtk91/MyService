@@ -7,12 +7,19 @@ interface IProps {
 }
 
 interface IMyClaims {
+  exp: number;
   userId: string;
 }
 
 export default function AuthProvider(props: IProps) {
   const authService = useAuthService();
-  const [token, setToken] = useState("");
+  const tokenFromLocalStorage = () => {
+    const token = localStorage.getItem("token") || "";
+    authService.setAuthHeader(token);
+    return token;
+  };
+
+  const [token, setToken] = useState(tokenFromLocalStorage());
 
   const getJwtClaims = (token: string): IMyClaims => {
     const claims: IMyClaims = jwt_decode(token);
@@ -39,7 +46,13 @@ export default function AuthProvider(props: IProps) {
     setToken("");
   };
 
-  const isAuthenticated = () => token !== "";
+  const isAuthenticated = () => {
+    if (token === "") return false;
+
+    const claims = getJwtClaims(token);
+    const expiration = claims.exp * 1000;
+    return Date.now() < expiration;
+  };
 
   useEffect(() => {
     const token = localStorage.getItem("token");

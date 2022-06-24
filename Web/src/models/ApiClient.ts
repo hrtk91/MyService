@@ -28,6 +28,15 @@ export default class ApiClient {
     return await this.axios.post(url, data, config).then((res) => res);
   };
 
+  public delete = async (
+    url: string,
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    data?: any | undefined,
+    config?: AxiosRequestConfig | undefined
+  ): Promise<AxiosResponse> => {
+    return await this.axios.delete(url, config);
+  };
+
   public getFullUrl = (relativeUrl: string): string => {
     relativeUrl.replace(/^\//, "");
     return `${this.baseUrl}/${relativeUrl.replace(/^\//, "")}`;

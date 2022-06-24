@@ -41,10 +41,6 @@ export default function AuthProvider(props: IProps) {
 
   const isAuthenticated = () => token !== "";
 
-  useEffect(() => {
-    console.log(`AuthProvider : ${token}`);
-  });
-
   return (
     <AuthContext.Provider
       value={{

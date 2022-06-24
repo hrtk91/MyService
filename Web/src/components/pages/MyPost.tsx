@@ -19,6 +19,7 @@ export default function MyPost() {
         let userId = "";
         try {
           userId = auth.userId();
+          setUserId(userId);
         } catch (err) {
           alert(
             "ユーザーの取得に失敗しました。\n再度ログインしなおしてください。"
@@ -29,7 +30,6 @@ export default function MyPost() {
 
         try {
           const articles = await articleService.all(userId);
-          setUserId(userId);
           setArticles(articles);
         } catch (err) {
           alert("ページ読み込みに失敗しました。");
@@ -38,6 +38,12 @@ export default function MyPost() {
       };
       initialize();
     }, []);
+
+    const deleteArticle = async (articleId: string) => {
+      await articleService.delete(articleId);
+      const articles = await articleService.all(userId);
+      setArticles(articles);
+    };
 
     return (
       <div>
@@ -48,17 +54,24 @@ export default function MyPost() {
             <Card key={article.articleId}>
               <>
                 <CardText>
-                  <>
-                    ArticleId : {article.articleId}
-                    Name : {article.owner.name}
-                  </>
+                  <>ArticleId : {article.articleId}</>
                 </CardText>
+                <CardText>
+                  <>Name : {article.owner.name}</>
+                </CardText>
+                <button
+                  className="btn btn-danger"
+                  onClick={() => deleteArticle(article.articleId)}
+                >
+                  削除
+                </button>
                 <CardBottomImages>
                   <>
                     {article.pictures.map((pic) => (
                       <img
                         key={pic.pictureId}
                         src={pictureService.getImgUrl(pic.pictureId)}
+                        className="h-auto w-100"
                       />
                     ))}
                   </>

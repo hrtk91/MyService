@@ -80,6 +80,7 @@ public class AccountService : IAccountService
             {
                 LoginId = id,
                 LoginPassword = password,
+                Name = authInfo.Id,
             };
             try
             {

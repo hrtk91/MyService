@@ -6,7 +6,7 @@ public class Article
 
     public List<Picture> Pictures { get; set; } = new List<Picture>();
 
-    public Guid OwnerId { get; set; }
+    public User Owner { get; set; } = new User();
 
     public DateTime Created { get; set; }
 
@@ -17,7 +17,7 @@ public class Article
         return new DTO.Article
         {
             ArticleId = model.ArticleId,
-            OwnerId = model.Owner.UserId,
+            Owner = User.From(model.Owner),
             Pictures = model.Pictures
                 .Select(x => DTO.Picture.From(x))
                 .ToList(),

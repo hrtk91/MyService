@@ -1,16 +1,13 @@
 import { useEffect, useState } from "react";
 import { IArticle } from "../../models/Interfaces";
-import Card from "../molecules/Card";
-import { useArticleService, useAuth, usePictureService } from "../../context";
+import { useArticleService, useAuth } from "../../context";
 import { Navigate } from "react-router-dom";
-import CardText from "../atoms/CardText";
-import CardBottomImages from "../atoms/CardBottomImages";
+import ArticleCard from "../organisms/ArticleCard";
 
 export default function MyPost() {
   try {
     const auth = useAuth();
     const articleService = useArticleService();
-    const pictureService = usePictureService();
     const [userId, setUserId] = useState("");
     const [articles, setArticles] = useState<IArticle[]>([]);
 
@@ -39,8 +36,7 @@ export default function MyPost() {
       initialize();
     }, []);
 
-    const deleteArticle = async (articleId: string) => {
-      await articleService.delete(articleId);
+    const deleteArticle = async () => {
       const articles = await articleService.all(userId);
       setArticles(articles);
     };
@@ -51,33 +47,11 @@ export default function MyPost() {
         <p>UserId : {userId}</p>
         <div className="card-group">
           {articles.map((article) => (
-            <Card key={article.articleId}>
-              <>
-                <CardText>
-                  <>ArticleId : {article.articleId}</>
-                </CardText>
-                <CardText>
-                  <>Name : {article.owner.name}</>
-                </CardText>
-                <button
-                  className="btn btn-danger"
-                  onClick={() => deleteArticle(article.articleId)}
-                >
-                  削除
-                </button>
-                <CardBottomImages>
-                  <>
-                    {article.pictures.map((pic) => (
-                      <img
-                        key={pic.pictureId}
-                        src={pictureService.getImgUrl(pic.pictureId)}
-                        className="h-auto w-100"
-                      />
-                    ))}
-                  </>
-                </CardBottomImages>
-              </>
-            </Card>
+            <ArticleCard
+              key={article.articleId}
+              onDelete={deleteArticle}
+              article={article}
+            />
           ))}
         </div>
       </div>

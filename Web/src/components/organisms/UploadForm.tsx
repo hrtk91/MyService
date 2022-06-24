@@ -8,8 +8,9 @@ interface IProps {
 
 export default function UploadForm(props: IProps) {
   const [files, setFiles] = useState<File[]>([]);
-  const fileInput = React.createRef<HTMLInputElement>();
   const [fileUrls, setFileUrls] = useState<string[]>([]);
+  const fileInput = React.createRef<HTMLInputElement>();
+
   const onChange = () => {
     const files = [...(fileInput?.current?.files ?? [])];
     setFiles(files);
@@ -23,7 +24,11 @@ export default function UploadForm(props: IProps) {
   };
   const onSubmit = (ev: FormEvent<HTMLFormElement>) => {
     ev.preventDefault();
-    props.onSubmit?.(files);
+    if (files.length !== 0) {
+      props.onSubmit?.(files);
+    } else {
+      alert("ファイルが選択されていません。");
+    }
   };
 
   useEffect(() => {

@@ -1,26 +1,15 @@
 import axios, { AxiosRequestConfig, AxiosResponse } from "axios";
-import jwt_decode from "jwt-decode";
 
-export interface IMyClaims {
-  userId: string;
-}
-
-export default class HttpClient {
+export default class ApiClient {
   private baseUrl = "http://localhost:5200/api";
   private axios = axios.create({ baseURL: this.baseUrl });
-  private token = "";
 
-  public setAuthorizationHeader = (token: string): void => {
-    this.token = token;
-    this.axios.defaults.headers.common.Authorization = `Bearer ${token}`;
+  public setCommonHeader = (key: string, value: string) => {
+    this.axios.defaults.headers.common[key] = value;
   };
 
-  public isAuthorized = (): boolean => this.token !== "";
-
-  public getJwtClaims = (): IMyClaims => {
-    if (this.token === "") throw new Error("認証が未実施です。");
-    const claims: IMyClaims = jwt_decode(this.token);
-    return claims;
+  public setAuthHeader = (token: string): void => {
+    this.axios.defaults.headers.common.Authorization = token;
   };
 
   public get = async (

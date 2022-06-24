@@ -10,5 +10,12 @@ export interface IPicture {
 export interface IArticle {
   articleId: string;
   pictures: IPicture[];
-  ownerId: string;
+  owner: IOwner;
+}
+
+export interface IOwner {
+  userId: string;
+  name: string;
+  created: string;
+  modified: string;
 }

@@ -1,9 +1,9 @@
-import HttpClient from "../models/HttpClient";
+import ApiClient from "../models/ApiClient";
 
 export default class PictureService {
-  private httpClient: HttpClient;
+  private httpClient: ApiClient;
 
-  public constructor(httpClient: HttpClient) {
+  public constructor(httpClient: ApiClient) {
     this.httpClient = httpClient;
   }
 

@@ -1,24 +1,28 @@
 import { useState } from "react";
-import AccountService from "../../services/AccountService";
+import { useLocation, useNavigate } from "react-router-dom";
+import { useAuth } from "../../context";
 import AuthForm from "../molecules/AuthForm";
 
-interface IProps {
-  accountService: AccountService;
-}
+export default function SignupForm() {
+  const navigate = useNavigate();
+  const location = useLocation();
+  const auth = useAuth();
 
-export default function SignupForm(props: IProps) {
   const [id, setId] = useState("");
   const [password, setPassword] = useState("");
-  const accountService = props.accountService;
+
+  const from = location.state?.from?.pathname || "/";
+
   const clear = (): void => {
     setId("");
     setPassword("");
   };
+
   const signup = async (): Promise<void> => {
     try {
-      accountService.signup(id, password);
+      await auth.signup(id, password);
       clear();
-      alert("サインアップに成功しました。");
+      navigate(from, { replace: true });
     } catch (err) {
       console.table(err);
       alert("サインインに失敗しました。もう一度やり直してください。");

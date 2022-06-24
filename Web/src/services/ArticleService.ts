@@ -1,10 +1,10 @@
-import HttpClient from "../models/HttpClient";
+import ApiClient from "../models/ApiClient";
 import { IArticle } from "../models/Interfaces";
 
 export default class ArticleService {
-  private httpClient: HttpClient;
+  private httpClient: ApiClient;
 
-  public constructor(httpClient: HttpClient) {
+  public constructor(httpClient: ApiClient) {
     this.httpClient = httpClient;
   }
 

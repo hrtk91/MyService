@@ -55,15 +55,8 @@ export default function AuthProvider(props: IProps) {
   };
 
   useEffect(() => {
-    const token = localStorage.getItem("token");
-    if (token) {
-      authService.setAuthHeader(token);
-      setToken(token);
-    }
-  }, []);
-
-  useEffect(() => {
     localStorage.setItem("token", token);
+    authService.setAuthHeader(token);
   }, [token]);
 
   return (

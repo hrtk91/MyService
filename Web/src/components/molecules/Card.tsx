@@ -3,5 +3,5 @@ interface IProps {
 }
 
 export default function Card(props: IProps) {
-  return <div className="card">{props.children}</div>;
+  return <div className="card h-100">{props.children}</div>;
 }

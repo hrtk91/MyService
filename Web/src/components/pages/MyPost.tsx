@@ -33,6 +33,7 @@ export default function MyPost() {
           console.warn(err);
         }
       };
+
       initialize();
     }, []);
 

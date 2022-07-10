@@ -1,6 +1,6 @@
 import { useEffect, useState } from "react";
 import { Link, Outlet } from "react-router-dom";
-import { useAuth, useAuthService } from "../../context";
+import { useAuth, useAuthService } from "../context";
 
 export default function Home() {
   const auth = useAuth();

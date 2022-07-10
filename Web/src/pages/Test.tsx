@@ -1,7 +1,7 @@
 import { useNavigate } from "react-router-dom";
-import { useArticleService } from "../../context";
-import LatestPost from "../organisms/LatestPost";
-import UploadForm from "../organisms/UploadForm";
+import { useArticleService } from "../context";
+import LatestPost from "../components/organisms/LatestPost";
+import UploadForm from "../components/organisms/UploadForm";
 
 export default function Test() {
   const navigate = useNavigate();

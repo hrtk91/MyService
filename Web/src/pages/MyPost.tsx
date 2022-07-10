@@ -1,8 +1,8 @@
 import { useEffect, useState } from "react";
-import { IArticle } from "../../models/Interfaces";
-import { useArticleService, useAuth } from "../../context";
+import { IArticle } from "../models/Interfaces";
+import { useArticleService, useAuth } from "../context";
 import { Navigate } from "react-router-dom";
-import ArticleCard from "../organisms/ArticleCard";
+import ArticleCard from "../components/organisms/ArticleCard";
 
 export default function MyPost() {
   try {

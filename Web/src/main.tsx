@@ -1,17 +1,17 @@
 import React from "react";
 import ReactDOM from "react-dom/client";
 import { BrowserRouter, Route, Routes } from "react-router-dom";
-import App from "./components/pages/App";
-import Home from "./components/pages/Home";
-import Signin from "./components/pages/Signin";
-import Test from "./components/pages/Test";
-import Signup from "./components/pages/Signup";
+import App from "./pages/App";
+import Home from "./pages/Home";
+import Signin from "./pages/Signin";
+import Test from "./pages/Test";
+import Signup from "./pages/Signup";
 import "./styles/index.css";
-import MyPost from "./components/pages/MyPost";
+import MyPost from "./pages/MyPost";
 import AuthProvider from "./components/templates/AuthProvider";
 import RequireAuth from "./components/templates/RequireAuth";
 import ServiceProvider from "./components/templates/ServiceProvider";
-import Signout from "./components/pages/Signout";
+import Signout from "./pages/Signout";
 
 ReactDOM.createRoot(document.getElementById("root")!).render(
   <React.StrictMode>

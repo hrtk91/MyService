@@ -9,6 +9,7 @@ namespace API.Controllers;
 
 [ApiController]
 [Route("api/[controller]")]
+[Produces("application/json")]
 public class ArticleController : ControllerBase
 {
     private readonly IArticleService articleService;
@@ -39,7 +40,7 @@ public class ArticleController : ControllerBase
 
     [HttpGet]
     [Authorize]
-    [Route("All/{userId}")]
+    [Route("all/{userId}")]
     public async Task<ActionResult<IEnumerable<DTO.Article>>> All(Guid userId)
     {
         var articles = await articleService.All(userId);

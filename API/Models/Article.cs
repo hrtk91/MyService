@@ -9,6 +9,10 @@ public class Article
 
     public List<Picture> Pictures { get; set; } = new List<Picture>();
 
+    public List<ArticleComment> Comments = new List<ArticleComment>();
+
+    public List<Like> Likes = new List<Like>();
+
     [Required]
     public User Owner { get; set; } = new User();
 

@@ -15,6 +15,10 @@ public class User
 
     public string Name { get; set; } = string.Empty;
 
+    public List<ArticleComment> ArticleComments { get; set; } = new List<ArticleComment>();
+
+    public List<Like> Likes { get; set; } = new List<Like>();
+
     [Required]
     public DateTime Created { get; set; } = DateTime.UtcNow;
 

@@ -20,6 +20,10 @@ public class ArticleService : Interfaces.IArticleService
         var article = await context.Articles
             .Include(x => x.Pictures)
             .Include(x => x.Owner)
+            .Include(x => x.Comments)
+                .ThenInclude(x => x.Owner)
+            .Include(x => x.Likes)
+                .ThenInclude(x => x.Owner)
             .SingleOrDefaultAsync(x => x.ArticleId == id);
         if (article is null)
         {
@@ -34,6 +38,10 @@ public class ArticleService : Interfaces.IArticleService
         var articles = await context.Articles
             .Include(x => x.Pictures)
             .Include(x => x.Owner)
+            .Include(x => x.Comments)
+                .ThenInclude(x => x.Owner)
+            .Include(x => x.Likes)
+                .ThenInclude(x => x.Owner)
             .Where(x => x.Owner.UserId == userId)
             .ToListAsync();
         return articles.Select(x => DTO.Article.From(x)).ToList();
@@ -74,5 +82,45 @@ public class ArticleService : Interfaces.IArticleService
             .SingleAsync(x => x.ArticleId == id);
         context.Remove(article);
         await context.SaveChangesAsync();
+    }
+
+    public async Task AddComment(DTO.ArticleComment dto)
+    {
+        var user = await WrapToNotFoundIfNull(
+            context.Users.SingleOrDefaultAsync(x => x.UserId == dto.Owner.UserId),
+            "ArticleCommentのUserIdに一致するユーザーが存在しませんでした。");
+        var article = await WrapToNotFoundIfNull(
+            context.Articles.SingleOrDefaultAsync(x => x.ArticleId == dto.ArticleId),
+            "ArticleCommentのArticleIdに一致するArticleが存在しませんでした。");
+
+        var comment = new Models.ArticleComment
+        {
+            Article = article!,
+            Content = dto.Content,
+            Owner = user!,
+        };
+        await context.ArticleComments.AddAsync(comment);
+        await context.SaveChangesAsync();
+    }
+
+    public async Task DeleteComment(DTO.ArticleComment dto)
+    {
+        var comment = await WrapToNotFoundIfNull(
+            context.ArticleComments.SingleOrDefaultAsync(x => x.ArticleCommentId == dto.ArticleCommentId),
+            "一致するCommentが存在しませんでした。");
+
+        context.ArticleComments.Remove(comment!);
+        await context.SaveChangesAsync();
+    }
+
+    private async Task<T> WrapToNotFoundIfNull<T>(Task<T> task, string exceptionMessage = "")
+    {
+        var value = await task;
+        if (value is not null)
+        {
+            return value;
+        }
+
+        throw new NotFoundException(exceptionMessage);
     }
 }

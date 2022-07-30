@@ -18,12 +18,7 @@ public class PictureController : ControllerBase
     public async Task<IActionResult> Get(string pictureId)
     {
         var fileName = await picService.GetFileName(pictureId);
-        if (!picService.Exists(fileName))
-        {
-            return NotFound();
-        }
-
-        var stream = picService.Open(fileName);
+        var stream = await picService.Open(fileName);
         return File(stream, "image/*");
     }
 }

@@ -11,4 +11,8 @@ public interface IArticleService
     public Task<IEnumerable<DTO.Article>> Latest(int num = 10);
 
     public Task Delete(Guid id);
+
+    public Task AddComment(DTO.ArticleComment dto);
+
+    public Task DeleteComment(DTO.ArticleComment dto);
 }

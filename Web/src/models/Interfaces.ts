@@ -10,6 +10,8 @@ export interface IPicture {
 export interface IArticle {
   articleId: string;
   pictures: IPicture[];
+  comments: IArticleComment[];
+  likes: ILike[];
   owner: IOwner;
 }
 
@@ -18,4 +20,16 @@ export interface IOwner {
   name: string;
   created: string;
   modified: string;
+}
+
+export interface IArticleComment {
+  articleCommentId: string;
+  articleId: string;
+  content: string;
+  owner: IOwner;
+}
+
+export interface ILike {
+  likeId: string;
+  owner: IOwner;
 }

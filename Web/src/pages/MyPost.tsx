@@ -48,11 +48,19 @@ export default function MyPost() {
         <p>UserId : {userId}</p>
         <div className="card-group">
           {articles.map((article) => (
-            <ArticleCard
-              key={article.articleId}
-              onDelete={deleteArticle}
-              article={article}
-            />
+            <>
+              <ArticleCard
+                key={article.articleId}
+                onDelete={deleteArticle}
+                article={article}
+              />
+              {article.comments.map((comment) => (
+                <div key={comment.articleCommentId}>
+                  <p>{comment.content}</p>
+                  <p>{comment.owner.name}</p>
+                </div>
+              ))}
+            </>
           ))}
         </div>
       </div>

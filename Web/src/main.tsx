@@ -12,6 +12,7 @@ import AuthProvider from "./components/templates/AuthProvider";
 import RequireAuth from "./components/templates/RequireAuth";
 import ServiceProvider from "./components/templates/ServiceProvider";
 import Signout from "./pages/Signout";
+import ArticleDetail from "./pages/ArticleDetail";
 
 ReactDOM.createRoot(document.getElementById("root")!).render(
   <React.StrictMode>
@@ -33,6 +34,7 @@ ReactDOM.createRoot(document.getElementById("root")!).render(
                   </RequireAuth>
                 }
               />
+              <Route path="article/detail/:id" element={<ArticleDetail />} />
               <Route
                 path="/500"
                 element={

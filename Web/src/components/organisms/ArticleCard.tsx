@@ -1,3 +1,4 @@
+import { Link } from "react-router-dom";
 import {
   useArticleService,
   useAuth,
@@ -30,6 +31,12 @@ export default function ArticleCard(props: IProps) {
   return (
     <Card>
       <>
+        <Link
+          to={`/article/detail/${props.article.articleId}`}
+          state={props.article}
+        >
+          詳細
+        </Link>
         {isOwner ? (
           <button
             className="btn btn-danger"

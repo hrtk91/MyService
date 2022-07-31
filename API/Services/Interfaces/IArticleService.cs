@@ -15,4 +15,6 @@ public interface IArticleService
     public Task AddComment(DTO.ArticleComment dto);
 
     public Task DeleteComment(DTO.ArticleComment dto);
+
+    public Task ToggleLike(string article, string userId);
 }

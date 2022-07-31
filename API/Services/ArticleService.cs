@@ -113,6 +113,29 @@ public class ArticleService : Interfaces.IArticleService
         await context.SaveChangesAsync();
     }
 
+    public async Task ToggleLike(string articleId, string userId)
+    {
+        var model = await context.Articles
+            .Include(x => x.Likes)
+            .ThenInclude(x => x.Owner)
+            .SingleAsync(x => x.ArticleId.ToString() == articleId);
+        var like = model.Likes.SingleOrDefault(x => x.Owner.UserId.ToString() == userId);
+
+        if (like is null)
+        {
+            model.Likes.Add(new Models.Like
+            {
+                Owner = await context.Users.SingleAsync(x => x.UserId.ToString() == userId)
+            });
+        }
+        else
+        {
+            context.Likes.Remove(like);
+        }
+
+        await context.SaveChangesAsync();
+    }
+
     private async Task<T> WrapToNotFoundIfNull<T>(Task<T> task, string exceptionMessage = "")
     {
         var value = await task;

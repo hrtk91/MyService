@@ -82,4 +82,18 @@ public class ArticleController : ControllerBase
         await articleService.Delete(Guid.Parse(articleId));
         return NoContent();
     }
+
+    [HttpPost]
+    [Route("{articleId}/like")]
+    [Authorize]
+    public async Task<IActionResult> ToggleLike(string articleId)
+    {
+        var userId = User.Claims.SingleOrDefault(x => x.Type == "userId")?.Value;
+
+        if (userId is null) return Unauthorized();
+
+        await articleService.ToggleLike(articleId, userId);
+
+        return NoContent();
+    }
 }

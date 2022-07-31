@@ -1,25 +1,33 @@
+import { useEffect, useState } from "react";
+import { Heart, HeartFill } from "react-bootstrap-icons";
 import { useLocation, useParams } from "react-router-dom";
 import { Col, Container, Row, Spinner } from "reactstrap";
-import { useApiClient, usePictureService } from "../context";
-import { IArticle } from "../models/Interfaces";
 import CommentForm from "../components/organisms/CommentForm";
-import { useEffect, useState } from "react";
+import { useApiClient, useAuth, usePictureService } from "../context";
+import { IArticle } from "../models/Interfaces";
 
 export default function ArticleDetail() {
   const client = useApiClient();
   const params = useParams<{ id: string }>();
+  const auth = useAuth();
   const [article, setArticle] = useState<IArticle | null>(
     useLocation().state as IArticle
   );
+  const [hasLike, setLike] = useState(false);
+
+  const fetchArticle = async () => {
+    const article: IArticle = await client
+      .get(`article/${params.id}`)
+      .then((res) => res.data);
+    setArticle(article);
+    setLike(article.likes.some((x) => x.owner.userId == auth.userId()));
+  };
 
   useEffect(() => {
     if (params.id != null) {
-      (async () =>
-        setArticle(
-          await client.get(`article/${params.id}`).then((res) => res.data)
-        ))();
+      fetchArticle();
     }
-  }, []);
+  }, [hasLike]);
 
   // Articleがnullの間非表示
   if (article == null) {
@@ -34,6 +42,14 @@ export default function ArticleDetail() {
       src={picService.getImgUrl(x.pictureId)}
     />
   ));
+
+  const onClickLike = () => {
+    (async () => {
+      await client.post(`article/${article.articleId}/like`);
+      await fetchArticle();
+    })();
+  };
+
   return (
     <Container>
       <Row>
@@ -50,7 +66,14 @@ export default function ArticleDetail() {
       </Row>
       <Row>
         <Col xs="auto">Author : {article.owner.name}</Col>
-        <Col xs="auto">Likes : {article.likes.length}</Col>
+        <Col xs="auto">
+          {hasLike ? (
+            <HeartFill onClick={onClickLike} />
+          ) : (
+            <Heart onClick={onClickLike} />
+          )}{" "}
+          {article.likes.length}
+        </Col>
       </Row>
       <Row>
         <Col>

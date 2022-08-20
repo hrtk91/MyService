@@ -7,6 +7,8 @@ public class Article
     [Key]
     public Guid ArticleId { get; set; } = Guid.Empty;
 
+    public string Title { get; init; } = string.Empty;
+
     public List<Picture> Pictures { get; set; } = new List<Picture>();
 
     public List<ArticleComment> Comments = new List<ArticleComment>();

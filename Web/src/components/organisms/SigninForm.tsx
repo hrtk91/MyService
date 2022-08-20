@@ -23,7 +23,7 @@ export default function SigninForm() {
     try {
       await auth.signin(id, password);
       clear();
-      navigate(from, { replace: true });
+      navigate(from);
     } catch (err) {
       console.table(err);
       alert("サインインに失敗しました。もう一度やり直してください。");

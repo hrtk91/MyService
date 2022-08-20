@@ -1,8 +1,9 @@
+import { ReactNode } from "react";
 import { Navigate, useLocation } from "react-router-dom";
 import { useAuth } from "../../context";
 
 interface IProps {
-  children: JSX.Element;
+  children: ReactNode;
 }
 
 export default function RequireAuth(props: IProps) {
@@ -13,5 +14,5 @@ export default function RequireAuth(props: IProps) {
     return <Navigate to="/signin" state={{ from: location }} replace />;
   }
 
-  return props.children;
+  return <>{props.children}</>;
 }

@@ -20,7 +20,7 @@ export default function ArticleDetail() {
       .get(`article/${params.id}`)
       .then((res) => res.data);
     setArticle(article);
-    setLike(article.likes.some((x) => x.owner.userId == auth.userId()));
+    setLike(article.likes.some((x) => x.owner.userId == auth.userId));
   };
 
   useEffect(() => {
@@ -51,7 +51,7 @@ export default function ArticleDetail() {
   };
 
   return (
-    <Container>
+    <Container className="w-50">
       <Row>
         <Col>
           <h3>{article.articleId}</h3>
@@ -77,7 +77,10 @@ export default function ArticleDetail() {
       </Row>
       <Row>
         <Col>
-          <CommentForm articleId={article.articleId} />
+          <CommentForm
+            articleId={article.articleId}
+            onAfterPost={fetchArticle}
+          />
         </Col>
       </Row>
       {article.comments.map((x) => (
@@ -89,6 +92,7 @@ export default function ArticleDetail() {
             <small>{x.articleCommentId}</small>
           </Col>
           <Col xs="12">{x.content}</Col>
+          <div className="p-2" />
         </Row>
       ))}
     </Container>

@@ -3,29 +3,37 @@ import { IToken } from "../models/Interfaces";
 import jwt_decode from "jwt-decode";
 
 export interface IMyClaims {
+  exp: number;
   userId: string;
 }
 
-export default class AuthenticationService {
+export default class AuthService {
   private apiClient: ApiClient;
+
+  private token: string;
+
+  public get userId(): string | null {
+    if (!this.isAuthenticated()) return null;
+    const claims = this.getJwtClaims();
+    return claims.userId;
+  }
 
   public constructor(apiClient: ApiClient) {
     this.apiClient = apiClient;
+    this.token = "";
   }
 
-  public signin = async (id: string, password: string): Promise<string> => {
+  public signin = async (id: string, password: string): Promise<IMyClaims> => {
     try {
-      const token = await this.apiClient
+      const { token } = await this.apiClient
         .post("/account/signin", {
           id: id,
           password: password,
         })
-        .then((res): IToken => res.data)
-        .then((itoken) => itoken.token);
+        .then((res): IToken => res.data);
 
-      this.setAuthHeader(token);
-
-      return token;
+      this.saveToken(token);
+      return this.getJwtClaims();
     } catch (err: unknown) {
       if (err instanceof Error) {
         throw new Error(
@@ -40,7 +48,7 @@ export default class AuthenticationService {
     }
   };
 
-  public signup = async (id: string, password: string): Promise<string> => {
+  public signup = async (id: string, password: string): Promise<IMyClaims> => {
     try {
       const token = await this.apiClient
         .post("/account/signup", {
@@ -50,9 +58,8 @@ export default class AuthenticationService {
         .then((res): IToken => res.data)
         .then((itoken) => itoken.token);
 
-      this.setAuthHeader(token);
-
-      return token;
+      this.saveToken(token);
+      return this.getJwtClaims();
     } catch (err) {
       if (err instanceof Error) {
         throw new Error(
@@ -69,19 +76,25 @@ export default class AuthenticationService {
 
   public signout = () => {
     this.apiClient.setAuthHeader("");
+    localStorage.setItem("token", "");
   };
 
-  public getJwtClaims = (token: string): IMyClaims => {
-    const claims: IMyClaims = jwt_decode(token);
+  public getJwtClaims = (): IMyClaims => {
+    const claims: IMyClaims = jwt_decode(this.token);
     return claims;
   };
 
-  public userId = (token: string): string => {
-    const claims = this.getJwtClaims(token);
-    return claims.userId;
+  public saveToken = (token: string) => {
+    this.token = token;
+    this.apiClient.setAuthHeader(`Bearer ${token}`);
+    localStorage.setItem("token", token);
   };
 
-  public setAuthHeader = (token: string) => {
-    this.apiClient.setAuthHeader(`Bearer ${token}`);
+  public isAuthenticated = () => {
+    if (this.token === "") return false;
+
+    const { exp }: IMyClaims = jwt_decode(this.token);
+    const result = Date.now() < exp * 1000;
+    return result;
   };
 }

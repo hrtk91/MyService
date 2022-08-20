@@ -1,75 +1,62 @@
 import { useEffect, useState } from "react";
-import { IArticle } from "../models/Interfaces";
-import { useArticleService, useAuth } from "../context";
-import { Navigate } from "react-router-dom";
+import { Row, Col, Container } from "reactstrap";
 import ArticleCard from "../components/organisms/ArticleCard";
+import { useArticleService, useAuth } from "../context";
+import { IArticle } from "../models/Interfaces";
 
 export default function MyPost() {
-  try {
-    const auth = useAuth();
-    const articleService = useArticleService();
-    const [userId, setUserId] = useState("");
-    const [articles, setArticles] = useState<IArticle[]>([]);
+  const [initialized, setInitialized] = useState(false);
+  const auth = useAuth();
+  const articleService = useArticleService();
+  const [userId, setUserId] = useState("");
+  const [articles, setArticles] = useState<IArticle[]>([]);
 
-    useEffect(() => {
-      const initialize = async () => {
-        let userId = "";
-        try {
-          userId = auth.userId();
-          setUserId(userId);
-        } catch (err) {
-          alert(
-            "ユーザーの取得に失敗しました。\n再度ログインしなおしてください。"
-          );
-          console.warn(err);
-          return;
-        }
+  if (!auth.isAuthenticated) return <></>;
 
-        try {
-          const articles = await articleService.all(userId);
-          setArticles(articles);
-        } catch (err) {
-          alert("ページ読み込みに失敗しました。");
-          console.warn(err);
-        }
-      };
+  useEffect(() => {
+    (async () => {
+      const userId = auth.token?.userId;
 
-      initialize();
-    }, []);
+      if (userId == null) return;
+      setUserId(userId);
 
-    const deleteArticle = async () => {
-      const articles = await articleService.all(userId);
-      setArticles(articles);
-    };
+      try {
+        const articles = await articleService.all(userId);
+        setArticles(articles);
+      } catch (err) {
+        alert("ページ読み込みに失敗しました。");
+        console.error(err);
+      } finally {
+        setInitialized(true);
+      }
+    })();
+  }, []);
 
-    return (
-      <div>
+  const deleteArticle = async () => {
+    const articles = await articleService.all(userId);
+    setArticles(articles);
+  };
+
+  if (!initialized) return <></>;
+
+  return (
+    <Container>
+      <Row>
         <h1>MyPost</h1>
-        <p>UserId : {userId}</p>
-        <div className="card-group">
-          {articles.map((article) => (
-            <>
+      </Row>
+      <Row xs="1" md="2" lg="3">
+        {articles.map((article) => (
+          <Col key={article.articleId}>
+            <div className="pt-4">
               <ArticleCard
                 key={article.articleId}
                 onDelete={deleteArticle}
                 article={article}
               />
-              {article.comments.map((comment) => (
-                <div key={comment.articleCommentId}>
-                  <p>{comment.content}</p>
-                  <p>{comment.owner.name}</p>
-                </div>
-              ))}
-            </>
-          ))}
-        </div>
-      </div>
-    );
-  } catch (err) {
-    alert(
-      "ページ読み込みに失敗しました。\n時間をおいて再度アクセスしてください。"
-    );
-    console.warn(err);
-    return <Navigate to="/500"></Navigate>;
-  }
+            </div>
+          </Col>
+        ))}
+      </Row>
+    </Container>
+  );
 }

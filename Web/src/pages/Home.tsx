@@ -1,23 +1,18 @@
-import { useEffect, useState } from "react";
+import { useEffect } from "react";
 import { Link, Outlet } from "react-router-dom";
-import { useAuth, useAuthService } from "../context";
+import { useAuth } from "../context";
 
 export default function Home() {
   const auth = useAuth();
-  const authService = useAuthService();
-  const [userId, setUserId] = useState("");
-
-  const getUserId = () =>
-    auth.isAuthenticated() ? authService.userId(auth.token) : "";
 
   useEffect(() => {
-    setUserId(getUserId());
-  });
+    console.log("Home update auth");
+  }, [auth]);
 
   return (
     <div>
       <div className="row">
-        <div className="col">
+        <div className="col-auto">
           <ul className="nav nav-pills">
             <li className="nav-item">
               <Link to="/" className="nav-link">
@@ -41,9 +36,12 @@ export default function Home() {
             </li>
           </ul>
         </div>
-        <div className="col-auto pe-4">
+        <div className="col-auto ms-auto pe-4">
           {auth.isAuthenticated() ? (
-            <Link to="/signout">Signout</Link>
+            <>
+              <span>Logged in by {auth.token?.userId}</span>
+              <Link to="/signout">Signout</Link>
+            </>
           ) : (
             <ul className="nav nav-pills">
               <li className="nav-link">
@@ -60,13 +58,7 @@ export default function Home() {
           )}
         </div>
       </div>
-      {userId !== "" ? (
-        <p>
-          Logged in by {userId} : {}
-        </p>
-      ) : (
-        <p>Not loggined</p>
-      )}
+      <hr className="m-1" />
       <Outlet />
     </div>
   );

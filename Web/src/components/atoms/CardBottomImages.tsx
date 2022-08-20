@@ -1,7 +1,11 @@
 interface IProps {
-  children: JSX.Element;
+  children: JSX.Element[] | JSX.Element;
 }
 
 export default function CardTopImages(props: IProps) {
-  return <div className="card-img-bottom">{props.children}</div>;
+  const children = Array.isArray(props.children)
+    ? props.children
+    : [props.children];
+
+  return <div className="card-img-bottom">{children}</div>;
 }

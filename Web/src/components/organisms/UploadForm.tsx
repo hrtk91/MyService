@@ -40,23 +40,25 @@ export default function UploadForm(props: IProps) {
 
   return (
     <RequireAuth>
-      <div>
-        <form onSubmit={onSubmit}>
-          <label className="form-label">ファイルを選択してください。</label>
-          <div className="input-group">
-            <input
-              type="file"
-              className="form-control"
-              accept="image/png, image/jpeg"
-              ref={fileInput}
-              onChange={onChange}
-              multiple
-            />
-            <button className="btn btn-primary">投稿</button>
-          </div>
-        </form>
-        <Carousel itemUrls={fileUrls} />
-      </div>
+      <form onSubmit={onSubmit}>
+        <label className="form-label">ファイルを選択してください。</label>
+        <div className="input-group">
+          <input
+            type="file"
+            className="form-control"
+            accept="image/png, image/jpeg"
+            ref={fileInput}
+            onChange={onChange}
+            multiple
+          />
+          <button className="btn btn-primary">投稿</button>
+        </div>
+      </form>
+      <Carousel>
+        {fileUrls.map((x, idx) => (
+          <img key={idx} src={x} />
+        ))}
+      </Carousel>
     </RequireAuth>
   );
 }

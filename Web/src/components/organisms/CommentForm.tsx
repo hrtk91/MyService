@@ -1,9 +1,10 @@
 import { ChangeEvent, useState } from "react";
-import { Button } from "reactstrap";
+import { Button, InputGroup } from "reactstrap";
 import { useApiClient } from "../../context";
 
 interface IProps {
   articleId: string;
+  onAfterPost?: () => void;
 }
 
 export default function CommentForm(props: IProps) {
@@ -22,10 +23,11 @@ export default function CommentForm(props: IProps) {
       content: input,
     });
     setInput("");
+    props.onAfterPost?.();
   };
 
   return (
-    <>
+    <InputGroup>
       <input
         className="form-control"
         type="text"
@@ -35,6 +37,6 @@ export default function CommentForm(props: IProps) {
       <Button color="primary" type="button" onClick={onClickButton}>
         投稿
       </Button>
-    </>
+    </InputGroup>
   );
 }

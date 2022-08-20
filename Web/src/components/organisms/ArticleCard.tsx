@@ -1,14 +1,11 @@
-import { Link } from "react-router-dom";
-import {
-  useArticleService,
-  useAuth,
-  useAuthService,
-  usePictureService,
-} from "../../context";
+import { useArticleService, useAuth, usePictureService } from "../../context";
 import { IArticle } from "../../models/Interfaces";
 import CardBottomImages from "../atoms/CardBottomImages";
 import CardFooter from "../atoms/CardFooter";
+import CardHeader from "../atoms/CardHeader";
+import LinkButton from "../atoms/LinkButton";
 import Card from "../molecules/Card";
+import Carousel from "../molecules/Carousel";
 
 interface IProps {
   article: IArticle;
@@ -17,62 +14,65 @@ interface IProps {
 
 export default function ArticleCard(props: IProps) {
   const auth = useAuth();
-  const authService = useAuthService();
   const articleService = useArticleService();
   const pictureService = usePictureService();
-  const deleteArticle = async (articleId: string) => {
-    await articleService.delete(articleId);
-    props.onDelete?.(articleId);
-  };
+  const deleteArticle = () =>
+    (async () => {
+      await articleService.delete(props.article.articleId);
+      props.onDelete?.(props.article.articleId);
+    })();
 
-  const userId = authService.userId(auth.token);
+  const userId = auth.userId;
   const isOwner = userId === props.article.owner.userId;
 
   return (
     <Card>
-      <>
-        <Link
+      <CardHeader>
+        <LinkButton
           to={`/article/detail/${props.article.articleId}`}
           state={props.article}
+          color="primary"
         >
           詳細
-        </Link>
+        </LinkButton>
+        <span className="ps-2"></span>
         {isOwner ? (
-          <button
-            className="btn btn-danger"
-            onClick={() => deleteArticle(props.article.articleId)}
-          >
+          <button className="btn btn-danger" onClick={deleteArticle}>
             削除
           </button>
         ) : (
           <></>
         )}
+      </CardHeader>
+      <div className="bg-secondary">
         <CardBottomImages>
-          <>
-            {props.article.pictures.map((pic) => (
-              <img
-                key={pic.pictureId}
-                src={pictureService.getImgUrl(pic.pictureId)}
-                className="h-auto w-100"
-              />
-            ))}
-          </>
+          <Carousel>
+            {props.article.pictures
+              .map((pic) => pictureService.getImgUrl(pic.pictureId))
+              .map((url, idx) => (
+                <div
+                  className="d-flex align-items-center justify-content-center"
+                  key={idx}
+                >
+                  <img
+                    style={{ objectFit: "contain" }}
+                    src={url}
+                    height="150px"
+                  />
+                </div>
+              ))}
+          </Carousel>
         </CardBottomImages>
-        <CardFooter>
+      </div>
+      <CardFooter>
+        <div>
           <div>
-            <div>
-              <small className="text-muted">
-                ArticleId : {props.article.articleId}
-              </small>
-            </div>
-            <div>
-              <small className="text-muted">
-                UserName : {props.article.owner.name}
-              </small>
-            </div>
+            <small className="text-muted">
+              UserName : {props.article.owner.name}
+            </small>
           </div>
-        </CardFooter>
-      </>
+        </div>
+      </CardFooter>
     </Card>
   );
 }

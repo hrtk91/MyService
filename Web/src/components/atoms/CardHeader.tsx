@@ -1,5 +1,5 @@
 interface IProps {
-  children: JSX.Element;
+  children: JSX.Element[] | JSX.Element;
 }
 
 export default function CardHeader(props: IProps) {

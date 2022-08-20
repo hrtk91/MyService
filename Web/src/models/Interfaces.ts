@@ -9,6 +9,7 @@ export interface IPicture {
 
 export interface IArticle {
   articleId: string;
+  title: string;
   pictures: IPicture[];
   comments: IArticleComment[];
   likes: ILike[];

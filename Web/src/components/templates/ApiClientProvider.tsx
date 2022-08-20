@@ -1,4 +1,3 @@
-import { useState } from "react";
 import { ApiClientContext } from "../../context";
 import ApiClient from "../../models/ApiClient";
 
@@ -7,7 +6,7 @@ interface IProps {
 }
 
 export default function ApiClientProvider(props: IProps) {
-  const [apiClient] = useState(new ApiClient());
+  const apiClient = new ApiClient();
   return (
     <ApiClientContext.Provider value={apiClient}>
       {props.children}

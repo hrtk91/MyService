@@ -1,8 +1,8 @@
 import { useEffect, useState } from "react";
+import { Col, Row } from "reactstrap";
 import { useArticleService } from "../../context";
 import { IArticle } from "../../models/Interfaces";
 import ArticleCard from "./ArticleCard";
-import CommentForm from "./CommentForm";
 
 export default function LatestPost() {
   const articleService = useArticleService();
@@ -15,13 +15,12 @@ export default function LatestPost() {
     getArticles();
   }, []);
   return (
-    <div className="card-group">
+    <Row xs="1" sm="2" md="3">
       {articles.map((article) => (
-        <div key={article.articleId} style={{ maxWidth: "5rem" }}>
+        <Col key={article.articleId}>
           <ArticleCard article={article} />
-          <CommentForm articleId={article.articleId} />
-        </div>
+        </Col>
       ))}
-    </div>
+    </Row>
   );
 }

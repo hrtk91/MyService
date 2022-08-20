@@ -22,7 +22,7 @@ export default function ArticleCard(props: IProps) {
       props.onDelete?.(props.article.articleId);
     })();
 
-  const userId = auth.userId;
+  const userId = auth.token?.userId;
   const isOwner = userId === props.article.owner.userId;
 
   return (
